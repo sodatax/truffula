@@ -34,7 +34,7 @@ public class TruffulaOptionsTest {
     File directory = new File(tempDir, "subfolder");
     directory.mkdir();
     String directoryPath = directory.getAbsolutePath();
-    String[] args = {"-h", directoryPath};
+    String[] args = {directoryPath};
 
     // Act: Create TruffulaOptions instance
     TruffulaOptions options = new TruffulaOptions(args);
