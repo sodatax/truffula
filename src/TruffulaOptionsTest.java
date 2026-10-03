@@ -50,7 +50,7 @@ public class TruffulaOptionsTest {
     // Arrange: Prepare the arguments with the temp directory
     File directory = new File(tempDir, "subfolder");
     directory.mkdir();
-    String directoryPath = "";
+    String directoryPath = "directoryPath";
     String[] args = {"-nc", "-h", directoryPath};
 
     // Assert: Check that the root directory is set correctly
