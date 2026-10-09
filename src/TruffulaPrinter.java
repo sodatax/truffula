@@ -125,7 +125,7 @@ public class TruffulaPrinter {
     int colorCycler = depth %colors.size();
     if(options.isUseColor()) out.setCurrentColor(colors.get(colorCycler));
 
-    out.println(indents+root.getName()+"/", false);
+    out.println(indents+root.getName()+"/", options.isUseColor());
     indents += "   ";
 
     for(File file : directory){
@@ -136,9 +136,8 @@ public class TruffulaPrinter {
       }else{
         int fileColorCycler = (depth+1) %colors.size();
         if(options.isUseColor()) out.setCurrentColor(colors.get(fileColorCycler));
+        out.println(indents+file.getName(), options.isUseColor());
       }
-
-      out.println(indents+file.getName(), options.isUseColor());
     }
   }
 }
