@@ -152,32 +152,22 @@ public class TruffulaPrinterTest {
 
     @Test
     public void testPrintTreeWithFoldersOnly(@TempDir File tempDir) throws IOException {
-        // Create "myFolder"
         File myFolder = new File(tempDir, "myFolder");
         assertTrue(myFolder.mkdir(), "myFolder should be created");
 
-        // Create subdirectory "Documents" in myFolder
         File documents = new File(myFolder, "Documents");
         assertTrue(documents.mkdir(), "Documents directory should be created");
 
-        // Create subdirectory "images" in Documents
         File images = new File(documents, "images");
         assertTrue(images.mkdir(), "images directory should be created");
 
-        // Set up TruffulaOptions with showHidden = false and useColor = true
         TruffulaOptions options = new TruffulaOptions(myFolder, false, false);
-
-        // Capture output using a custom PrintStream
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(baos);
-
-        // Instantiate TruffulaPrinter with custom PrintStream
         TruffulaPrinter printer = new TruffulaPrinter(options, printStream);
 
-        // Call printTree (output goes to printStream)
         printer.printTree();
 
-        // Retrieve printed output
         String output = baos.toString();
         String nl = System.lineSeparator();
 
@@ -186,41 +176,29 @@ public class TruffulaPrinterTest {
         expected.append("   Documents/").append(nl);
         expected.append("      images/").append(nl);
 
-        // Assert that the output matches the expected output exactly
         assertEquals(expected.toString(), output);
     }
 
     @Test
     public void testPrintTreeWithHiddenFileShown(@TempDir File tempDir) throws IOException {
-        // Create "myFolder"
         File myFolder = new File(tempDir, "myFolder");
         assertTrue(myFolder.mkdir(), "myFolder should be created");
 
-        // Create a hidden file
         createHiddenFile(myFolder, ".hidden.txt");
 
-        // Create subdirectory "Documents" in myFolder
         File documents = new File(myFolder, "Documents");
         documents.mkdir();
 
-        // Create subdirectory "images" in Documents
         File images = new File(documents, "images");
         images.mkdir();
 
-        // Set up TruffulaOptions with showHidden = false and useColor = true
         TruffulaOptions options = new TruffulaOptions(myFolder, true, false);
-
-        // Capture output using a custom PrintStream
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(baos);
-
-        // Instantiate TruffulaPrinter with custom PrintStream
         TruffulaPrinter printer = new TruffulaPrinter(options, printStream);
 
-        // Call printTree (output goes to printStream)
         printer.printTree();
 
-        // Retrieve printed output
         String output = baos.toString();
         String nl = System.lineSeparator();
 
@@ -230,7 +208,37 @@ public class TruffulaPrinterTest {
         expected.append("   Documents/").append(nl);
         expected.append("      images/").append(nl);
 
-        // Assert that the output matches the expected output exactly
+        assertEquals(expected.toString(), output);
+    }
+
+    @Test
+    public void testPrintTreeWithHiddenFileNotShown(@TempDir File tempDir) throws IOException {
+        File myFolder = new File(tempDir, "myFolder");
+        assertTrue(myFolder.mkdir(), "myFolder should be created");
+
+        createHiddenFile(myFolder, ".hidden.txt");
+
+        File documents = new File(myFolder, "Documents");
+        documents.mkdir();
+
+        File images = new File(documents, "images");
+        images.mkdir();
+
+        TruffulaOptions options = new TruffulaOptions(myFolder, false, false);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(baos);
+        TruffulaPrinter printer = new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String output = baos.toString();
+        String nl = System.lineSeparator();
+
+        StringBuilder expected = new StringBuilder();
+        expected.append("myFolder/").append(nl);
+        expected.append("   Documents/").append(nl);
+        expected.append("      images/").append(nl);
+
         assertEquals(expected.toString(), output);
     }
 }
