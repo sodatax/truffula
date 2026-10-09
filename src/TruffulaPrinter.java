@@ -116,6 +116,8 @@ public class TruffulaPrinter {
     // out.println("printTree was called!");
     // out.println("My options are: " + options);
     printDirectoryTree(options.getRoot(), "");
+
+
   }
   private void printDirectoryTree(File root, String indents){
     File[] directory = root.listFiles();
@@ -124,6 +126,8 @@ public class TruffulaPrinter {
     indents += "   ";
 
     for(File file : directory){
+      if(!options.isShowHidden() && file.isHidden()) continue;
+
       if(file.isDirectory()){
         printDirectoryTree(file, indents);
       }else{
