@@ -120,7 +120,7 @@ public class TruffulaPrinter {
 
   }
   private void printDirectoryTree(File root, String indents, int depth, List<ConsoleColor> colors){
-    File[] directory = root.listFiles();
+    File[] directory = AlphabeticalFileSorter.sort(root.listFiles());
 
     int colorCycler = depth %colors.size();
     if(options.isUseColor()) out.setCurrentColor(colors.get(colorCycler));
