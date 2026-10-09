@@ -278,4 +278,73 @@ public class TruffulaPrinterTest {
 
         assertEquals(expected.toString(), output);
     }
+
+    @Test
+    public void testPrintTreeSortingNonAlphabeticalFoldersAndFilesAlphabetically(@TempDir File tempDir) throws IOException {
+        //Make Folder A and its contents
+        File aFolder = new File(tempDir, "aFolder");
+        aFolder.mkdir();
+
+        File z = new File(aFolder, "z.txt");
+        File h = new File(aFolder, "h.docx");
+        File d = new File(aFolder, "d.flp");
+        z.createNewFile();
+        h.createNewFile();
+        d.createNewFile();
+
+        //Make folder R and its contents
+        File rFolder = new File(tempDir, "rFolder");
+        rFolder.mkdir();
+        
+        File g = new File(rFolder, "g.flp");
+        g.createNewFile();
+        File tFolder = new File(rFolder, "tFolder");
+        tFolder.mkdir();
+        File yFolder = new File(tFolder, "yFolder");
+        yFolder.mkdir();
+
+        //Make folder I and its contents
+        File iFolder = new File(tempDir, "iFolder");
+        iFolder.mkdir();
+
+        File l = new File(iFolder, "l.png");
+        l.createNewFile();
+        File q = new File(iFolder, "q.png");
+        q.createNewFile();
+        File o = new File(iFolder, "o.gif");
+        o.createNewFile();
+
+        TruffulaOptions options = new TruffulaOptions(tempDir, true, true);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(baos);
+        TruffulaPrinter printer = new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String output = baos.toString();
+        String nl = System.lineSeparator();
+
+        ConsoleColor reset = ConsoleColor.RESET;
+        ConsoleColor white = ConsoleColor.WHITE;
+        ConsoleColor purple = ConsoleColor.PURPLE;
+        ConsoleColor yellow = ConsoleColor.YELLOW;
+
+        //abcdefghijklmnopqrstuvwxyz
+        StringBuilder expected = new StringBuilder();
+        expected.append(white).append(tempDir.getName()).append("/").append(nl).append(reset);
+        expected.append(purple).append("   aFolder/").append(nl).append(reset);
+        expected.append(yellow).append("      d.flp").append(nl).append(reset);
+        expected.append(yellow).append("      h.docx").append(nl).append(reset);
+        expected.append(yellow).append("      z.txt").append(nl).append(reset);
+        expected.append(purple).append("   iFolder/").append(nl).append(reset);
+        expected.append(yellow).append("      l.png").append(nl).append(reset);
+        expected.append(yellow).append("      o.gif").append(nl).append(reset);
+        expected.append(yellow).append("      q.png").append(nl).append(reset);
+        expected.append(purple).append("   rFolder/").append(nl).append(reset);
+        expected.append(yellow).append("      g.flp").append(nl).append(reset);
+        expected.append(yellow).append("      tFolder/").append(nl).append(reset);
+        expected.append(white).append("         yFolder/").append(nl).append(reset);
+
+        assertEquals(expected.toString(), output);
+    }
 }
