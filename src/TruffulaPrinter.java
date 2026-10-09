@@ -115,24 +115,30 @@ public class TruffulaPrinter {
 
     // out.println("printTree was called!");
     // out.println("My options are: " + options);
-    printDirectoryTree(options.getRoot(), "");
+    printDirectoryTree(options.getRoot(), "", 0, colorSequence);
 
 
   }
-  private void printDirectoryTree(File root, String indents){
+  private void printDirectoryTree(File root, String indents, int depth, List<ConsoleColor> colors){
     File[] directory = root.listFiles();
+
+    int colorCycler = depth %colors.size();
+    if(options.isUseColor()) out.setCurrentColor(colors.get(colorCycler));
+
     out.println(indents+root.getName()+"/", false);
-    
     indents += "   ";
 
     for(File file : directory){
       if(!options.isShowHidden() && file.isHidden()) continue;
 
       if(file.isDirectory()){
-        printDirectoryTree(file, indents);
+        printDirectoryTree(file, indents, depth+1, colors);
       }else{
-        out.println(indents+file.getName(), false);
+        int fileColorCycler = (depth+1) %colors.size();
+        if(options.isUseColor()) out.setCurrentColor(colors.get(fileColorCycler));
       }
+
+      out.println(indents+file.getName(), options.isUseColor());
     }
   }
 }

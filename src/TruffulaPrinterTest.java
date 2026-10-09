@@ -241,4 +241,41 @@ public class TruffulaPrinterTest {
 
         assertEquals(expected.toString(), output);
     }
+
+    @Test
+    public void testPrintTreeWithHiddenFileShownAndColor(@TempDir File tempDir) throws IOException {
+        File myFolder = new File(tempDir, "myFolder");
+        assertTrue(myFolder.mkdir(), "myFolder should be created");
+
+        createHiddenFile(myFolder, ".hidden.txt");
+
+        File documents = new File(myFolder, "Documents");
+        documents.mkdir();
+
+        File images = new File(documents, "images");
+        images.mkdir();
+
+        TruffulaOptions options = new TruffulaOptions(myFolder, true, true);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(baos);
+        TruffulaPrinter printer = new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String output = baos.toString();
+        String nl = System.lineSeparator();
+
+        ConsoleColor reset = ConsoleColor.RESET;
+        ConsoleColor white = ConsoleColor.WHITE;
+        ConsoleColor purple = ConsoleColor.PURPLE;
+        ConsoleColor yellow = ConsoleColor.YELLOW;
+
+        StringBuilder expected = new StringBuilder();
+        expected.append(white).append("myFolder/").append(nl).append(reset);
+        expected.append(purple).append("   .hidden.txt").append(nl).append(reset);
+        expected.append(purple).append("   Documents/").append(nl).append(reset);
+        expected.append(yellow).append("      images/").append(nl).append(reset);
+
+        assertEquals(expected.toString(), output);
+    }
 }
